@@ -13,7 +13,7 @@ class MainActivity : Activity() {
         "Yuumi", "Nami", "Lux", "Morgana",
         "Pyke", "Blitzcrank", "Rakan", "Alistar",
         "Braum", "Senna", "Seraphine", "Sona",
-        "Karma"
+        "Karma","Janna"
     )
 
     private val adcs = arrayOf(
@@ -21,7 +21,7 @@ class MainActivity : Activity() {
         "Ashe", "Xayah", "Caitlyn", "Varus",
         "Miss Fortune", "Lucian", "Tristana",
         "Draven", "Vayne", "Samira", "Nilah",
-        "Corki", "Twitch", "Zeri", "Sivir"
+        "Corki", "Twitch", "Zeri", "Sivir","Kog'Maw"
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -367,9 +367,31 @@ class MainActivity : Activity() {
             if (champion == "Blitzcrank") score += 3
             if (champion == "Pyke") score += 2
         }
+        score += matchupAdvantage(champion, enemySupport)
         return score
     }
+    private fun matchupAdvantage(
+        champion: String,
+        enemySupport: String
+    ): Int {
 
+        val counters = mapOf(
+            "Nautilus" to arrayOf("Lux", "Sona", "Senna"),
+            "Morgana" to arrayOf("Nautilus", "Leona", "Thresh", "Blitzcrank"),
+            "Alistar" to arrayOf("Leona", "Nautilus", "Rakan"),
+            "Braum" to arrayOf("Blitzcrank", "Thresh"),
+            "Blitzcrank" to arrayOf("Sona", "Yuumi", "Nami"),
+            "Pyke" to arrayOf("Sona", "Yuumi", "Senna"),
+            "Lulu" to arrayOf("Pyke", "Rakan"),
+            "Nami" to arrayOf("Braum", "Alistar")
+        )
+
+        if (counters[champion]?.contains(enemySupport) == true) {
+            return 3
+        }
+
+        return 0
+    }
     private fun pickReason(
         champion: String,
         allyAdc: String,
@@ -378,7 +400,13 @@ class MainActivity : Activity() {
     ): String {
 
         val reasons = mutableListOf<String>()
-
+        if (matchupAdvantage(champion, enemySupport) > 0) {
+            reasons.add(
+                "VANTAGEM DE MATCHUP: este suporte possui " +
+                "ferramentas favoráveis contra o suporte inimigo. " +
+                "Explore as janelas de oportunidade."
+            )
+        }
         if (enemySupport in arrayOf(
             "Leona", "Nautilus", "Thresh",
             "Blitzcrank", "Pyke", "Rakan", "Alistar"
