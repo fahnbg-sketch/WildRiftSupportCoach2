@@ -320,11 +320,17 @@ class MainActivity : Activity() {
             )) score += 2
         }
 
-        if (enemyAdc == "Samira" &&
+         if (enemyAdc == "Samira" &&
             champion in arrayOf("Braum", "Alistar")
         ) score += 2
 
-                // COUNTERS ENTRE SUPORTES
+        if (enemyAdc in arrayOf("Jinx", "Vayne", "Tristana")) {
+            if (champion in arrayOf("Braum", "Alistar", "Leona")) score += 2
+        }
+
+        // COUNTERS ENTRE SUPORTES
+    
+            
 
         if (enemySupport == "Nautilus" ||
             enemySupport == "Leona" ||
