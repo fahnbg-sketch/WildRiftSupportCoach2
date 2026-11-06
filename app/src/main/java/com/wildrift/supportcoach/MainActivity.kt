@@ -280,13 +280,37 @@ class MainActivity : Activity() {
             )) score += 4
         }
 
-        if (allyAdc == "Ezreal" &&
-            champion in arrayOf("Karma", "Nami", "Lux")
-        ) score += 2
 
         if (allyAdc == "Jhin" &&
             champion in arrayOf("Nami", "Leona", "Morgana")
         ) score += 2
+        if (allyAdc == "Jinx" &&
+            champion in arrayOf("Lulu", "Nami", "Thresh")
+        ) score += 3
+
+        if (allyAdc == "Kai'Sa" &&
+            champion in arrayOf("Nautilus", "Rakan", "Leona")
+        ) score += 3
+
+        if (allyAdc == "Caitlyn" &&
+            champion in arrayOf("Morgana", "Karma", "Lux")
+        ) score += 3
+
+        if (allyAdc == "Draven" &&
+            champion in arrayOf("Nautilus", "Leona", "Pyke")
+        ) score += 3
+
+        if (allyAdc == "Vayne" &&
+            champion in arrayOf("Lulu", "Nami", "Braum")
+        ) score += 3
+
+        if (allyAdc == "Samira" &&
+            champion in arrayOf("Nautilus", "Leona", "Alistar")
+        ) score += 3
+
+        if (allyAdc == "Ezreal" &&
+            champion in arrayOf("Karma", "Nami", "Lux")
+        ) score += 3
 
         if (enemyAdc in arrayOf(
             "Draven", "Lucian", "Caitlyn"
