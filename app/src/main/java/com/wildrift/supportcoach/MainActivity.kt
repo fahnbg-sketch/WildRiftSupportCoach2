@@ -13,7 +13,8 @@ class MainActivity : Activity() {
         "Nautilus", "Thresh", "Leona", "Lulu",
         "Yuumi", "Nami", "Lux", "Morgana",
         "Pyke", "Blitzcrank", "Rakan", "Alistar",
-        "Braum", "Senna", "Seraphine", "Sona"
+        "Braum", "Senna", "Seraphine", "Sona",
+        "Karma"
     )
 
     private val adcs = arrayOf(
@@ -90,40 +91,28 @@ class MainActivity : Activity() {
             "ANÁLISE DA BOT LANE", 23f
         ))
 
-        layout.addView(createText(
-            "SEU TIME", 19f
-        ))
+        layout.addView(createText("SEU TIME", 19f))
 
-        layout.addView(createText(
-            "Seu suporte", 16f
-        ))
+        layout.addView(createText("Seu suporte", 16f))
         val mySupport = createSpinner(supports)
         layout.addView(mySupport)
 
-        layout.addView(createText(
-            "Seu ADC aliado", 16f
-        ))
+        layout.addView(createText("Seu ADC aliado", 16f))
         val myAdc = createSpinner(adcs)
         layout.addView(myAdc)
 
-        layout.addView(createText(
-            "TIME INIMIGO", 19f
-        ))
+        layout.addView(createText("TIME INIMIGO", 19f))
 
-        layout.addView(createText(
-            "Suporte inimigo", 16f
-        ))
+        layout.addView(createText("Suporte inimigo", 16f))
         val enemySupport = createSpinner(supports)
         layout.addView(enemySupport)
 
-        layout.addView(createText(
-            "ADC inimigo", 16f
-        ))
+        layout.addView(createText("ADC inimigo", 16f))
         val enemyAdc = createSpinner(adcs)
         layout.addView(enemyAdc)
 
         val result = createText(
-            "Escolha os quatro campeões para analisar a rota.",
+            "Escolha os quatro campeões para analisar.",
             15f
         )
 
@@ -161,121 +150,160 @@ class MainActivity : Activity() {
         enemyAdc: String
     ): String {
 
-        val supportStyle = when (enemySupport) {
-            "Nautilus", "Thresh", "Leona",
-            "Blitzcrank", "Pyke", "Rakan",
-            "Alistar" -> "INICIAÇÃO E CONTROLE"
-
-            "Lux", "Morgana", "Seraphine",
-            "Senna" -> "POKE E CONTROLE À DISTÂNCIA"
-
-            "Lulu", "Yuumi", "Nami",
-            "Sona", "Braum" -> "PROTEÇÃO E SUSTENTAÇÃO"
-
-            else -> "ESTILO VARIÁVEL"
-        }
-
-        val adcStyle = when (enemyAdc) {
-            "Draven", "Caitlyn", "Lucian",
-            "Miss Fortune" -> "PRESSÃO DE ROTA"
-
-            "Ezreal", "Varus", "Jhin",
-            "Ashe", "Corki" -> "POKE E ALCANCE"
-
-            "Jinx", "Kai'Sa", "Tristana",
-            "Vayne", "Twitch", "Zeri",
-            "Sivir" -> "ESCALAMENTO"
-
-            "Samira", "Nilah" -> "COMBATE PRÓXIMO"
-
-            else -> "ESTILO MISTO"
-        }
-
-        val enemyThreat = when {
-            supportStyle == "INICIAÇÃO E CONTROLE" &&
-            adcStyle == "PRESSÃO DE ROTA" ->
-                "ALTA PRESSÃO: respeite a iniciação e o dano da dupla."
-
-            supportStyle == "INICIAÇÃO E CONTROLE" ->
-                "PERIGO DE ENGAGE: cuidado com controles e iniciações."
-
-            supportStyle == "POKE E CONTROLE À DISTÂNCIA" ->
-                "PRESSÃO À DISTÂNCIA: evite receber habilidades gratuitamente."
-
-            supportStyle == "PROTEÇÃO E SUSTENTAÇÃO" ->
-                "DUPLA RESISTENTE: procure trocas coordenadas."
-
-            else ->
-                "CONFRONTO VARIÁVEL: observe o posicionamento inimigo."
-        }
-
-        val strategy = when (supportStyle) {
-            "INICIAÇÃO E CONTROLE" ->
-                "Espere o inimigo gastar habilidades importantes. " +
-                "Evite ficar exposto e procure uma oportunidade segura."
-
-            "POKE E CONTROLE À DISTÂNCIA" ->
-                "Use os arbustos e a movimentação para evitar poke. " +
-                "Avance quando o inimigo errar suas habilidades."
-
-            "PROTEÇÃO E SUSTENTAÇÃO" ->
-                "Procure trocas coordenadas e observe as habilidades " +
-                "de proteção antes de iniciar."
-
-            else ->
-                "Observe as habilidades inimigas e procure trocas favoráveis."
-        }
-
-        val ownStrategy = when (support) {
-            "Nautilus", "Thresh", "Leona",
-            "Blitzcrank", "Pyke", "Rakan",
-            "Alistar" ->
-                "Seu suporte tem ferramentas de iniciação. " +
-                "Procure oportunidades quando o inimigo estiver vulnerável."
-
-            "Lulu", "Yuumi", "Nami", "Sona",
-            "Braum", "Seraphine" ->
-                "Priorize proteger seu ADC e escolha bem o momento das trocas."
-
-            else ->
-                "Use suas habilidades para controlar o espaço e ajudar seu ADC."
+        if (support == "Nautilus") {
+            return analyzeNautilus(
+                adc, enemySupport, enemyAdc
+            )
         }
 
         return """
             ANÁLISE DA BOT LANE
 
-            SEU TIME
-            Suporte: $support
+            Seu suporte: $support
+            Seu ADC: $adc
+            Suporte inimigo: $enemySupport
+            ADC inimigo: $enemyAdc
+
+            A análise individual deste suporte
+            será desenvolvida nas próximas versões.
+
+            Desenvolvido por Numak.
+        """.trimIndent()
+    }
+
+    private fun analyzeNautilus(
+        adc: String,
+        enemySupport: String,
+        enemyAdc: String
+    ): String {
+
+        val matchup = when (enemySupport) {
+
+            "Morgana" ->
+                "CONFRONTO DIFÍCIL\n" +
+                "O Escudo Negro pode bloquear seu controle. " +
+                "Tente provocar o uso do escudo antes de iniciar."
+
+            "Alistar", "Braum" ->
+                "CONFRONTO DE ATENÇÃO\n" +
+                "Eles podem dificultar sua iniciação. " +
+                "Escolha bem o momento de entrar."
+
+            "Lulu", "Janna", "Nami", "Karma",
+            "Sona", "Seraphine" ->
+                "OPORTUNIDADE DE ENGAGE\n" +
+                "Procure janelas de iniciação, mas cuidado " +
+                "com o poke e as habilidades defensivas."
+
+            "Thresh", "Leona", "Pyke",
+            "Blitzcrank", "Rakan" ->
+                "CONFRONTO DE INICIAÇÃO\n" +
+                "Respeite o controle inimigo. " +
+                "Evite trocar habilidades sem necessidade."
+
+            "Senna", "Lux" ->
+                "CONFRONTO DE POKE\n" +
+                "Use os arbustos e evite receber habilidades " +
+                "gratuitamente. Procure uma aproximação segura."
+
+            else ->
+                "CONFRONTO VARIÁVEL\n" +
+                "Observe as habilidades inimigas e procure " +
+                "uma oportunidade segura."
+        }
+
+        val synergy = when (adc) {
+
+            "Kai'Sa", "Samira", "Draven",
+            "Tristana", "Lucian", "Nilah" ->
+                "BOA OPORTUNIDADE DE COMBATE\n" +
+                "Sua iniciação pode permitir que seu ADC " +
+                "entre rapidamente na luta."
+
+            "Jinx", "Vayne", "Twitch", "Zeri" ->
+                "PROTEJA O ESCALAMENTO\n" +
+                "Prepare iniciações seguras e proteja seu ADC. " +
+                "Evite lutas desnecessárias no começo."
+
+            "Ezreal", "Caitlyn", "Jhin",
+            "Ashe", "Varus", "Miss Fortune",
+            "Sivir", "Corki" ->
+                "COMBINE O ALCANCE\n" +
+                "Use seu controle para criar oportunidades " +
+                "de dano e pressão junto com seu ADC."
+
+            else ->
+                "COMBINE SUAS HABILIDADES\n" +
+                "Procure iniciar quando seu ADC puder acompanhar."
+        }
+
+        val enemyAdcPlan = when (enemyAdc) {
+
+            "Draven", "Lucian", "Caitlyn" ->
+                "Cuidado com o dano e a pressão nos primeiros níveis."
+
+            "Jinx", "Vayne", "Twitch", "Kai'Sa" ->
+                "Não permita que o inimigo escale gratuitamente. " +
+                "Procure oportunidades de vantagem na rota."
+
+            "Ezreal" ->
+                "Observe a habilidade de deslocamento do Ezreal " +
+                "antes de gastar seu gancho."
+
+            "Samira", "Nilah" ->
+                "Respeite o potencial de combate próximo da dupla."
+
+            else ->
+                "Observe o alcance e as habilidades do ADC inimigo."
+        }
+
+        return """
+            NAUTILUS — ANÁLISE ESTRATÉGICA
+
+            SUA DUPLA
+            Suporte: Nautilus
             ADC: $adc
 
-            TIME INIMIGO
+            DUPLA INIMIGA
             Suporte: $enemySupport
             ADC: $enemyAdc
 
-            ESTILO DA DUPLA INIMIGA
-            Suporte: $supportStyle
-            ADC: $adcStyle
+            MATCHUP CONTRA O SUPORTE
+            $matchup
 
-            NÍVEL DE ATENÇÃO
-            $enemyThreat
+            SINERGIA COM SEU ADC
+            $synergy
 
-            SUA ESTRATÉGIA
-            $ownStrategy
-
-            COMO JOGAR A ROTA
-            $strategy
+            ATENÇÃO AO ADC INIMIGO
+            $enemyAdcPlan
 
             PLANO DE JOGO
-            • Coordene suas jogadas com $adc.
-            • Observe o posicionamento dos dois inimigos.
-            • Evite iniciar sem avaliar o perigo.
-            • Proteja seu ADC nas trocas.
-            • Aproveite habilidades inimigas desperdiçadas.
 
-            Análise inicial baseada nos estilos dos campeões.
-            Matchups específicos serão adicionados nas próximas versões.
+            NÍVEIS 1 E 2
+            Priorize posicionamento e controle dos arbustos.
+            Não gaste seu gancho sem uma oportunidade clara.
+
+            NÍVEIS 3 A 5
+            Você ganha mais ferramentas para iniciar.
+            Procure combinar seu controle com o dano do ADC.
+
+            INICIAÇÃO
+            Use seu gancho quando seu ADC puder acompanhar.
+            Não entre sozinho em uma luta desfavorável.
+
+            PROTEÇÃO
+            Guarde habilidades de controle quando necessário
+            para impedir que os inimigos alcancem seu ADC.
+
+            LUTAS EM EQUIPE
+            Use sua ultimate em alvos importantes.
+            Avalie se é melhor iniciar ou proteger sua equipe.
+
+            DICA DO TREINADOR
+            Um bom Nautilus não é aquele que usa o gancho
+            toda hora. É aquele que sabe quando acertar.
+
+            Desenvolvido por Numak.
         """.trimIndent()
     }
 }
-
-
