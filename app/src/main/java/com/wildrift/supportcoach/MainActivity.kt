@@ -300,6 +300,33 @@ class MainActivity : Activity() {
             champion in arrayOf("Braum", "Alistar")
         ) score += 2
 
+                // COUNTERS ENTRE SUPORTES
+
+        if (enemySupport == "Nautilus" ||
+            enemySupport == "Leona" ||
+            enemySupport == "Blitzcrank" ||
+            enemySupport == "Thresh" ||
+            enemySupport == "Pyke") {
+
+            if (champion == "Morgana") score += 4
+            if (champion == "Alistar") score += 3
+            if (champion == "Braum") score += 2
+        }
+
+        if (enemySupport == "Lux" ||
+            enemySupport == "Senna" ||
+            enemySupport == "Seraphine" ||
+            enemySupport == "Sona") {
+
+            if (champion == "Nautilus") score += 3
+            if (champion == "Blitzcrank") score += 3
+            if (champion == "Pyke") score += 2
+        }
+
+        if (enemySupport == "Samira") {
+            if (champion == "Braum") score += 3
+            if (champion == "Alistar") score += 3
+        } 
         return score
     }
 
