@@ -1,4 +1,3 @@
-
 package com.wildrift.supportcoach
 
 import android.app.Activity
@@ -63,6 +62,19 @@ class MainActivity : Activity() {
         return spinner
     }
 
+    private fun createScroll(layout: LinearLayout) {
+        val scroll = ScrollView(this)
+        scroll.addView(layout)
+        setContentView(scroll)
+    }
+
+    private fun addBackButton(layout: LinearLayout) {
+        val button = Button(this)
+        button.text = "VOLTAR"
+        button.setOnClickListener { showHome() }
+        layout.addView(button)
+    }
+
     private fun showHome() {
         val layout = createLayout()
 
@@ -71,20 +83,311 @@ class MainActivity : Activity() {
         ))
 
         layout.addView(createText(
+            "Desenvolvido por Numak", 15f
+        ))
+
+        layout.addView(createText(
             "Seu treinador estratégico de BOT LANE", 16f
         ))
 
-        val button = Button(this)
-        button.text = "COMEÇAR"
-        button.setOnClickListener {
-            showSelectionScreen()
+        val draftButton = Button(this)
+        draftButton.text = "MODO DRAFT"
+        draftButton.setOnClickListener {
+            showDraftScreen()
         }
+        layout.addView(draftButton)
 
-        layout.addView(button)
-        setContentView(layout)
+        val matchButton = Button(this)
+        matchButton.text = "MODO PARTIDA"
+        matchButton.setOnClickListener {
+            showMatchScreen()
+        }
+        layout.addView(matchButton)
+
+        createScroll(layout)
     }
 
-    private fun showSelectionScreen() {
+    // MODO DRAFT
+
+    private fun showDraftScreen() {
+        val layout = createLayout()
+
+        layout.addView(createText(
+            "ASSISTENTE DE DRAFT", 23f
+        ))
+
+        layout.addView(createText(
+            "SEU TIME", 19f
+        ))
+
+        layout.addView(createText(
+            "ADC aliado", 16f
+        ))
+        val allyAdc = createSpinner(adcs)
+        layout.addView(allyAdc)
+
+        layout.addView(createText(
+            "TIME INIMIGO", 19f
+        ))
+
+        layout.addView(createText(
+            "Suporte inimigo", 16f
+        ))
+        val enemySupport = createSpinner(supports)
+        layout.addView(enemySupport)
+
+        layout.addView(createText(
+            "ADC inimigo", 16f
+        ))
+        val enemyAdc = createSpinner(adcs)
+        layout.addView(enemyAdc)
+
+        val result = createText(
+            "Selecione os campeões para receber recomendações.",
+            15f
+        )
+
+        val analyzeButton = Button(this)
+        analyzeButton.text = "RECOMENDAR PICKS E BANS"
+
+        analyzeButton.setOnClickListener {
+            result.text = generateDraftAnalysis(
+                allyAdc.selectedItem.toString(),
+                enemySupport.selectedItem.toString(),
+                enemyAdc.selectedItem.toString()
+            )
+        }
+
+        layout.addView(analyzeButton)
+        layout.addView(result)
+
+        addBackButton(layout)
+        createScroll(layout)
+    }
+
+    private fun generateDraftAnalysis(
+        allyAdc: String,
+        enemySupport: String,
+        enemyAdc: String
+    ): String {
+
+        val ranked = supports
+            .filter { it != enemySupport }
+            .map { champion ->
+                Pair(
+                    champion,
+                    scoreSupport(
+                        champion,
+                        allyAdc,
+                        enemySupport,
+                        enemyAdc
+                    )
+                )
+            }
+            .sortedByDescending { it.second }
+            .take(3)
+
+        val picks = ranked.mapIndexed { index, item ->
+            "${index + 1}º ${item.first}\n" +
+            pickReason(
+                item.first,
+                allyAdc,
+                enemySupport,
+                enemyAdc
+            )
+        }.joinToString("\n\n")
+
+        val bans = recommendBans(allyAdc, enemySupport)
+
+        return """
+            RESUMO DO DRAFT
+
+            SEU ADC: $allyAdc
+            SUPORTE INIMIGO: $enemySupport
+            ADC INIMIGO: $enemyAdc
+
+            TOP 3 SUPORTES RECOMENDADOS
+
+            $picks
+
+            BANS SUGERIDOS
+
+            $bans
+
+            DICA DO TREINADOR
+            Escolha considerando também sua experiência
+            com o campeão e a composição da equipe.
+
+            Recomendações estratégicas iniciais.
+            Desenvolvido por Numak.
+        """.trimIndent()
+    }
+
+    private fun scoreSupport(
+        champion: String,
+        allyAdc: String,
+        enemySupport: String,
+        enemyAdc: String
+    ): Int {
+
+        var score = 0
+
+        val engageEnemies = arrayOf(
+            "Leona", "Nautilus", "Thresh",
+            "Blitzcrank", "Pyke", "Rakan", "Alistar"
+        )
+
+        val pokeEnemies = arrayOf(
+            "Lux", "Karma", "Senna",
+            "Seraphine", "Morgana"
+        )
+
+        val engageAllies = arrayOf(
+            "Kai'Sa", "Samira", "Draven",
+            "Tristana", "Lucian", "Nilah"
+        )
+
+        val scalingAllies = arrayOf(
+            "Jinx", "Vayne", "Twitch",
+            "Zeri", "Kog'Maw"
+        )
+
+        if (enemySupport in engageEnemies) {
+            if (champion == "Morgana") score += 4
+            if (champion == "Alistar") score += 3
+            if (champion == "Braum") score += 3
+            if (champion == "Lulu") score += 2
+        }
+
+        if (enemySupport in pokeEnemies) {
+            if (champion == "Nautilus") score += 3
+            if (champion == "Blitzcrank") score += 3
+            if (champion == "Pyke") score += 2
+            if (champion == "Nami") score += 1
+        }
+
+        if (allyAdc in engageAllies) {
+            if (champion in arrayOf(
+                "Nautilus", "Leona", "Thresh",
+                "Rakan", "Alistar"
+            )) score += 4
+        }
+
+        if (allyAdc in scalingAllies) {
+            if (champion in arrayOf(
+                "Lulu", "Nami", "Braum",
+                "Janna", "Yuumi"
+            )) score += 4
+        }
+
+        if (allyAdc == "Ezreal" &&
+            champion in arrayOf("Karma", "Nami", "Lux")
+        ) score += 2
+
+        if (allyAdc == "Jhin" &&
+            champion in arrayOf("Nami", "Leona", "Morgana")
+        ) score += 2
+
+        if (enemyAdc in arrayOf(
+            "Draven", "Lucian", "Caitlyn"
+        )) {
+            if (champion in arrayOf(
+                "Braum", "Alistar", "Nautilus"
+            )) score += 2
+        }
+
+        if (enemyAdc == "Samira" &&
+            champion in arrayOf("Braum", "Alistar")
+        ) score += 2
+
+        return score
+    }
+
+    private fun pickReason(
+        champion: String,
+        allyAdc: String,
+        enemySupport: String,
+        enemyAdc: String
+    ): String {
+
+        val reasons = mutableListOf<String>()
+
+        if (enemySupport in arrayOf(
+            "Leona", "Nautilus", "Thresh",
+            "Blitzcrank", "Pyke", "Rakan", "Alistar"
+        ) && champion == "Morgana") {
+            reasons.add("Escudo Negro pode bloquear controles importantes.")
+        }
+
+        if (champion == "Braum" &&
+            enemyAdc in arrayOf("Draven", "Lucian", "Caitlyn", "Samira")
+        ) {
+            reasons.add("Boa ferramenta defensiva contra pressão e ataques.")
+        }
+
+        if (champion == "Alistar" &&
+            enemySupport in arrayOf("Leona", "Nautilus", "Rakan")
+        ) {
+            reasons.add("Pode interromper investidas e proteger seu ADC.")
+        }
+
+        if (allyAdc in arrayOf(
+            "Kai'Sa", "Samira", "Draven",
+            "Tristana", "Lucian", "Nilah"
+        ) && champion in arrayOf(
+            "Nautilus", "Leona", "Thresh", "Rakan", "Alistar"
+        )) {
+            reasons.add("Combina com ADCs que aproveitam iniciações.")
+        }
+
+        if (allyAdc in arrayOf(
+            "Jinx", "Vayne", "Twitch", "Zeri"
+        ) && champion in arrayOf(
+            "Lulu", "Nami", "Braum", "Yuumi"
+        )) {
+            reasons.add("Ajuda a proteger e fortalecer seu ADC.")
+        }
+
+        if (reasons.isEmpty()) {
+            reasons.add(
+                "Opção a considerar pela combinação da dupla e do confronto."
+            )
+        }
+
+        return reasons.joinToString("\n")
+    }
+
+    private fun recommendBans(
+        allyAdc: String,
+        enemySupport: String
+    ): String {
+
+        val bans = when (allyAdc) {
+            "Jinx", "Vayne", "Twitch", "Zeri" ->
+                "Blitzcrank — ameaça de puxão e iniciação.\n" +
+                "Draven — pressão elevada na rota."
+
+            "Kai'Sa", "Samira", "Nilah" ->
+                "Morgana — pode bloquear controles importantes.\n" +
+                "Leona — forte potencial de iniciação."
+
+            "Ezreal", "Jhin", "Ashe" ->
+                "Blitzcrank — ameaça de iniciação.\n" +
+                "Pyke — pressão e capacidade de executar alvos."
+
+            else ->
+                "Morgana — controle e Escudo Negro.\n" +
+                "Blitzcrank — ameaça de puxão."
+        }
+
+        return bans +
+            "\n\nAjuste os bans conforme os campeões " +
+            "que já foram escolhidos ou removidos."
+    }
+
+    // MODO PARTIDA
+
+    private fun showMatchScreen() {
         val layout = createLayout()
 
         layout.addView(createText(
@@ -131,16 +434,8 @@ class MainActivity : Activity() {
         layout.addView(analyzeButton)
         layout.addView(result)
 
-        val backButton = Button(this)
-        backButton.text = "VOLTAR"
-        backButton.setOnClickListener {
-            showHome()
-        }
-        layout.addView(backButton)
-
-        val scroll = ScrollView(this)
-        scroll.addView(layout)
-        setContentView(scroll)
+        addBackButton(layout)
+        createScroll(layout)
     }
 
     private fun generateAnalysis(
@@ -178,7 +473,6 @@ class MainActivity : Activity() {
     ): String {
 
         val matchup = when (enemySupport) {
-
             "Morgana" ->
                 "CONFRONTO DIFÍCIL\n" +
                 "O Escudo Negro pode bloquear seu controle. " +
@@ -213,7 +507,6 @@ class MainActivity : Activity() {
         }
 
         val synergy = when (adc) {
-
             "Kai'Sa", "Samira", "Draven",
             "Tristana", "Lucian", "Nilah" ->
                 "BOA OPORTUNIDADE DE COMBATE\n" +
@@ -238,7 +531,6 @@ class MainActivity : Activity() {
         }
 
         val enemyAdcPlan = when (enemyAdc) {
-
             "Draven", "Lucian", "Caitlyn" ->
                 "Cuidado com o dano e a pressão nos primeiros níveis."
 
