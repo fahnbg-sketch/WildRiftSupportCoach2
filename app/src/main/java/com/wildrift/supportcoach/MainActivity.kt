@@ -29,14 +29,15 @@ class MainActivity : Activity() {
         showHome()
     }
 
-    private fun createLayout(): LinearLayout {
-        val layout = LinearLayout(this)
-        layout.orientation = LinearLayout.VERTICAL
-        layout.gravity = Gravity.CENTER
-        layout.setPadding(24, 24, 24, 24)
-        layout.setBackgroundColor(Color.rgb(18, 20, 30))
-        return layout
-    }
+  private fun createLayout(): LinearLayout {
+    val layout = LinearLayout(this)
+    layout.orientation = LinearLayout.VERTICAL
+    layout.gravity = Gravity.CENTER_HORIZONTAL
+    layout.setPadding(24, 32, 24, 32)
+    layout.setBackgroundColor(Color.rgb(10, 15, 29))
+
+    return layout
+  }
 
     private fun createText(text: String, size: Float): TextView {
         val view = TextView(this)
@@ -63,9 +64,14 @@ class MainActivity : Activity() {
     }
 
     private fun createScroll(layout: LinearLayout) {
-        val scroll = ScrollView(this)
-        scroll.addView(layout)
-        setContentView(scroll)
+    val scroll = ScrollView(this)
+    scroll.layoutParams = LinearLayout.LayoutParams(
+        LinearLayout.LayoutParams.MATCH_PARENT,
+        LinearLayout.LayoutParams.MATCH_PARENT
+    )
+    scroll.isFillViewport = true
+    scroll.addView(layout)
+    setContentView(scroll)
     }
 
     private fun addBackButton(layout: LinearLayout) {
