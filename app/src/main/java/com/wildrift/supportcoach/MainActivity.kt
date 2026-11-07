@@ -324,9 +324,14 @@ class MainActivity : Activity() {
             champion in arrayOf("Braum", "Alistar")
         ) score += 2
 
-        if (enemyAdc in arrayOf("Jinx", "Vayne", "Tristana")) {
+                if (enemyAdc in arrayOf("Jinx", "Vayne", "Tristana")) {
             if (champion in arrayOf("Braum", "Alistar", "Leona")) score += 2
         }
+
+        score += matchupAdvantage(champion, enemySupport)
+
+        return score
+    }
 
     private fun matchupAdvantage(
         champion: String,
