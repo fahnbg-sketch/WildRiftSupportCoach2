@@ -328,48 +328,6 @@ class MainActivity : Activity() {
             if (champion in arrayOf("Braum", "Alistar", "Leona")) score += 2
         }
 
-        // COUNTERS ENTRE SUPORTES
-    
-            
-
-        if (enemySupport == "Nautilus" ||
-            enemySupport == "Leona" ||
-            enemySupport == "Blitzcrank" ||
-            enemySupport == "Thresh" ||
-            enemySupport == "Pyke") {
-
-            if (champion == "Morgana") score += 4
-            if (champion == "Alistar") score += 3
-            if (champion == "Braum") score += 2
-        }
-
-        if (enemySupport == "Lux" ||
-            enemySupport == "Senna" ||
-            enemySupport == "Seraphine" ||
-            enemySupport == "Sona") {
-
-            if (champion == "Nautilus") score += 3
-            if (champion == "Blitzcrank") score += 3
-            if (champion == "Pyke") score += 2
-        }
-
-        if (enemySupport == "Morgana") {
-            if (champion == "Nami") score += 3
-            if (champion == "Karma") score += 2
-        }
-
-        if (enemySupport == "Braum") {
-            if (champion == "Lulu") score += 3
-            if (champion == "Janna") score += 2
-        }
-
-        if (enemySupport == "Nami") {
-            if (champion == "Blitzcrank") score += 3
-            if (champion == "Pyke") score += 2
-        }
-        score += matchupAdvantage(champion, enemySupport)
-        return score
-    }
     private fun matchupAdvantage(
         champion: String,
         enemySupport: String
