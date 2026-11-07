@@ -40,13 +40,15 @@ class MainActivity : Activity() {
   }
 
     private fun createText(text: String, size: Float): TextView {
-        val view = TextView(this)
-        view.text = text
-        view.textSize = size
-        view.setTextColor(Color.WHITE)
-        view.gravity = Gravity.CENTER
-        view.setPadding(8, 14, 8, 14)
-        return view
+    val view = TextView(this)
+    view.text = text
+    view.textSize = size
+    view.setTextColor(Color.WHITE)
+    view.gravity = Gravity.CENTER
+    view.setPadding(8, 6, 8, 6)
+    view.includeFontPadding = true
+    view.minHeight = 0
+    return view
     }
 
     private fun createSpinner(items: Array<String>): Spinner {
