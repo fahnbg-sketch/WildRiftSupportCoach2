@@ -76,35 +76,80 @@ class MainActivity : Activity() {
     }
 
     private fun showHome() {
-        val layout = createLayout()
+    val layout = createLayout()
 
-        layout.addView(createText(
-            "WILD RIFT SUPPORT COACH", 24f
-        ))
+    layout.setBackgroundColor(Color.rgb(10, 15, 29))
+    layout.setPadding(32, 48, 32, 32)
 
-        layout.addView(createText(
-            "Desenvolvido por Numak", 15f
-        ))
+    val title = android.widget.TextView(this)
+    title.text = "WILD RIFT"
+    title.textSize = 32f
+    title.setTextColor(Color.WHITE)
+    title.gravity = Gravity.CENTER
+    title.setTypeface(null, android.graphics.Typeface.BOLD)
+    layout.addView(title)
 
-        layout.addView(createText(
-            "Seu treinador estratégico de BOT LANE", 16f
-        ))
+    val subtitle = android.widget.TextView(this)
+    subtitle.text = "SUPPORT COACH"
+    subtitle.textSize = 22f
+    subtitle.setTextColor(Color.rgb(0, 200, 255))
+    subtitle.gravity = Gravity.CENTER
+    subtitle.setTypeface(null, android.graphics.Typeface.BOLD)
+    layout.addView(subtitle)
 
-        val draftButton = Button(this)
-        draftButton.text = "MODO DRAFT"
-        draftButton.setOnClickListener {
-            showDraftScreen()
+    val description = android.widget.TextView(this)
+    description.text =
+        "SEU TREINADOR ESTRATÉGICO DE BOT LANE"
+    description.textSize = 13f
+    description.setTextColor(Color.LTGRAY)
+    description.gravity = Gravity.CENTER
+    description.setPadding(0, 30, 0, 50)
+    layout.addView(description)
+
+    fun styleButton(button: Button) {
+        button.setTextColor(Color.WHITE)
+        button.textSize = 17f
+        button.setTypeface(null, android.graphics.Typeface.BOLD)
+        button.isAllCaps = false
+        button.background = android.graphics.drawable.GradientDrawable().apply {
+            setColor(Color.rgb(15, 75, 120))
+            cornerRadius = 24f
+            setStroke(2, Color.rgb(0, 200, 255))
         }
-        layout.addView(draftButton)
 
-        val matchButton = Button(this)
-        matchButton.text = "MODO PARTIDA"
-        matchButton.setOnClickListener {
-            showMatchScreen()
-        }
-        layout.addView(matchButton)
+        val params = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            65
+        )
+        params.setMargins(0, 12, 0, 12)
+        button.layoutParams = params
+    }
 
-        createScroll(layout)
+    val draftButton = Button(this)
+    draftButton.text = "⚔  MODO DRAFT"
+    styleButton(draftButton)
+    draftButton.setOnClickListener {
+        showDraftScreen()
+    }
+    layout.addView(draftButton)
+
+    val matchButton = Button(this)
+    matchButton.text = "🎯  MODO PARTIDA"
+    styleButton(matchButton)
+    matchButton.setOnClickListener {
+        showMatchScreen()
+    }
+    layout.addView(matchButton)
+
+    val footer = android.widget.TextView(this)
+    footer.text = "DESENVOLVIDO POR NUMAK"
+    footer.textSize = 11f
+    footer.setTextColor(Color.GRAY)
+    footer.gravity = Gravity.CENTER
+    footer.setPadding(0, 55, 0, 0)
+    layout.addView(footer)
+
+    createScroll(layout)
     }
 
     // MODO DRAFT
