@@ -115,11 +115,13 @@ class MainActivity : Activity() {
     layout.addView(description)
 
     fun styleButton(button: Button) {
-        button.setTextColor(Color.WHITE)
-        button.textSize = 17f
-        button.setTypeface(null, android.graphics.Typeface.BOLD)
-        button.isAllCaps = false
-        button.background = android.graphics.drawable.GradientDrawable().apply {
+    button.setTextColor(Color.WHITE)
+    button.textSize = 17f
+    button.includeFontPadding = true
+    button.gravity = Gravity.CENTER
+    button.setTypeface(null, android.graphics.Typeface.BOLD)
+    button.isAllCaps = false
+    button.background = android.graphics.drawable.GradientDrawable().apply {
             setColor(Color.rgb(15, 75, 120))
             cornerRadius = 24f
             setStroke(2, Color.rgb(0, 200, 255))
