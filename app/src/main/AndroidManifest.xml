@@ -5,7 +5,7 @@
     <application
         android:allowBackup="true"
         android:label="Wild Rift Support Coach"
-        android:theme="@android:style/Theme.Material.Light.NoActionBar">
+        android:theme="@android:style/Theme.Material.NoActionBar"
 
         <activity
             android:name=".MainActivity"
