@@ -128,9 +128,9 @@ class MainActivity : Activity() {
         }
 
         val params = LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.MATCH_PARENT,
-            65
-        )
+    LinearLayout.LayoutParams.MATCH_PARENT,
+    80
+        ) 
         params.setMargins(0, 12, 0, 12)
         button.layoutParams = params
     }
